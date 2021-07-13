@@ -482,7 +482,7 @@ class ScaleneOutput:
                 #     Markdown("Memory  \n_Python_", style="dark_green"), style="dark_green", no_wrap=True, width=7
                 # )
                 tbl.add_column(
-                    Markdown("––––––  \n_net_", style="dark_green"), style="dark_green", no_wrap=True, width=6
+                    Markdown("––––––  \n_net_", style="dark_green"), style="dark_green", no_wrap=True, width=8
                 )
                 # tbl.add_column(
                 #     Markdown("–––––––––––  \n_timeline_/%", style="dark_green"),
@@ -493,7 +493,7 @@ class ScaleneOutput:
                 # tbl.add_column(
                 #     Markdown("Copy  \n_(MB/s)_", style="yellow4"), style="yellow4", no_wrap=True, width=6
                 # )
-                other_columns_width = 75 - (6 + 6 + 6 + 6 + 7 + 14 + 6) + (6 if self.gpu else 0)
+                other_columns_width = 77 - (6 + 6 + 6 + 6 + 7 + 14 + 6) + (6 if self.gpu else 0)
                 tbl.add_column(
                     "\n" + fname_print,
                     width=column_width - other_columns_width,
