@@ -50,6 +50,7 @@ class ScaleneParseArgs:
             f"""[b]Scalene[/b]: a high-precision CPU and memory profiler, version {scalene_version}
 [link=https://github.com/plasma-umass/scalene]https://github.com/plasma-umass/scalene[/link]
 
+Forked by @leemun1
 
 command-line:
   % [b]scalene \[options] yourprogram.py[/b]
@@ -77,7 +78,7 @@ for the process ID that Scalene reports. For example:
         )
 
         parser = RichArgParser( # argparse.ArgumentParser(
-            prog="scalene",
+            prog="scalene-mike",
             description=usage,
             epilog=epilog,
             formatter_class=argparse.RawTextHelpFormatter,
