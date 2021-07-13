@@ -156,13 +156,13 @@ class ScaleneOutput:
             n_growth_mem_str = (
                 ""
                 if (not n_growth_mb and not n_usage_fraction)
-                else f"{n_growth_mb:5.0f}M"
+                else f"{n_growth_mb:5.0f} MB"
             )
         else:
             n_growth_mem_str = (
                 ""
                 if (not n_growth_mb and not n_usage_fraction)
-                else f"{(n_growth_mb / 1024):5.2f}G"
+                else f"{(n_growth_mb / 1024):5.2f} GB"
             )
 
         n_usage_fraction_str: str = (
@@ -507,62 +507,62 @@ class ScaleneOutput:
                     no_wrap=True,
                 )
 
-            # # Print out the the profile for the source, line by line.
-            # with open(fname, "r") as source_file:
-            #     # We track whether we should put in ellipsis (for reduced profiles)
-            #     # or not.
-            #     did_print = True  # did we print a profile line last time?
-            #     code_lines = source_file.read()
-            #     # Generate syntax highlighted version for the whole file,
-            #     # which we will consume a line at a time.
-            #     # See https://github.com/willmcgugan/rich/discussions/965#discussioncomment-314233
-            #     syntax_highlighted = None
-            #     if self.html:
-            #         syntax_highlighted = Syntax(
-            #             code_lines,
-            #             "python",
-            #             theme="default",
-            #             line_numbers=False,
-            #             code_width=None,
-            #         )
-            #     else:
-            #         syntax_highlighted = Syntax(
-            #             code_lines,
-            #             "python",
-            #             theme="vim",
-            #             line_numbers=False,
-            #             code_width=None,
-            #         )
-            #     capture_console = Console(
-            #         width=column_width - other_columns_width,
-            #         force_terminal=True,
-            #     )
-            #     formatted_lines = [
-            #         SyntaxLine(segments)
-            #         for segments in capture_console.render_lines(
-            #             syntax_highlighted
-            #         )
-            #     ]
-            #     for line_no, line in enumerate(formatted_lines, start=1):
-            #         old_did_print = did_print
-            #         did_print = self.output_profile_line(
-            #             fname,
-            #             LineNumber(line_no),
-            #             line,
-            #             console,
-            #             tbl,
-            #             stats,
-            #             profile_this_code,
-            #             profile_memory=profile_memory,
-            #             force_print=False,
-            #             suppress_lineno_print=False,
-            #             is_function_summary=False,
-            #             reduced_profile=reduced_profile,
-            #         )
-            #         if old_did_print and not did_print:
-            #             # We are skipping lines, so add an ellipsis.
-            #             tbl.add_row("...")
-            #         old_did_print = did_print
+            # Print out the the profile for the source, line by line.
+            with open(fname, "r") as source_file:
+                # We track whether we should put in ellipsis (for reduced profiles)
+                # or not.
+                did_print = True  # did we print a profile line last time?
+                code_lines = source_file.read()
+                # Generate syntax highlighted version for the whole file,
+                # which we will consume a line at a time.
+                # See https://github.com/willmcgugan/rich/discussions/965#discussioncomment-314233
+                syntax_highlighted = None
+                if self.html:
+                    syntax_highlighted = Syntax(
+                        code_lines,
+                        "python",
+                        theme="default",
+                        line_numbers=False,
+                        code_width=None,
+                    )
+                else:
+                    syntax_highlighted = Syntax(
+                        code_lines,
+                        "python",
+                        theme="vim",
+                        line_numbers=False,
+                        code_width=None,
+                    )
+                capture_console = Console(
+                    width=column_width - other_columns_width,
+                    force_terminal=True,
+                )
+                formatted_lines = [
+                    SyntaxLine(segments)
+                    for segments in capture_console.render_lines(
+                        syntax_highlighted
+                    )
+                ]
+                for line_no, line in enumerate(formatted_lines, start=1):
+                    old_did_print = did_print
+                    did_print = self.output_profile_line(
+                        fname,
+                        LineNumber(line_no),
+                        line,
+                        console,
+                        tbl,
+                        stats,
+                        profile_this_code,
+                        profile_memory=profile_memory,
+                        force_print=False,
+                        suppress_lineno_print=False,
+                        is_function_summary=False,
+                        reduced_profile=reduced_profile,
+                    )
+                    if old_did_print and not did_print:
+                        # We are skipping lines, so add an ellipsis.
+                        tbl.add_row("...")
+                    old_did_print = did_print
 
             # Potentially print a function summary.
             fn_stats = stats.build_function_stats(fname)
