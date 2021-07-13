@@ -580,9 +580,9 @@ class ScaleneOutput:
                 )
                 if profile_memory:
                     if self.gpu:
-                        tbl.add_row("", "", "", "", "", "", "", "", "", txt)
+                        tbl.add_row("", "", txt)
                     else:
-                        tbl.add_row("", "", "", "", "", "", "", "", txt)
+                        tbl.add_row("", "", txt)
                 else:
                     if self.gpu:
                         tbl.add_row("", "", "", "", "", txt)
