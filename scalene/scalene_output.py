@@ -240,26 +240,26 @@ class ScaleneOutput:
                 if self.gpu:
                     tbl.add_row(
                         print_line_no,
-                        ncpps,  # n_cpu_percent_python_str,
-                        ncpcs,  # n_cpu_percent_c_str,
-                        sys_str,
-                        ngpus,
-                        n_python_fraction_str,
+                        # ncpps,  # n_cpu_percent_python_str,
+                        # ncpcs,  # n_cpu_percent_c_str,
+                        # sys_str,
+                        # ngpus,
+                        # n_python_fraction_str,
                         n_growth_mem_str,
-                        nufs,  # spark_str + n_usage_fraction_str,
-                        n_copy_mb_s_str,
+                        # nufs,  # spark_str + n_usage_fraction_str,
+                        # n_copy_mb_s_str,
                         line,
                     )
                 else:
                     tbl.add_row(
                         print_line_no,
-                        ncpps,  # n_cpu_percent_python_str,
-                        ncpcs,  # n_cpu_percent_c_str,
-                        sys_str,
-                        n_python_fraction_str,
+                        # ncpps,  # n_cpu_percent_python_str,
+                        # ncpcs,  # n_cpu_percent_c_str,
+                        # sys_str,
+                        # n_python_fraction_str,
                         n_growth_mem_str,
-                        nufs,  # spark_str + n_usage_fraction_str,
-                        n_copy_mb_s_str,
+                        # nufs,  # spark_str + n_usage_fraction_str,
+                        # n_copy_mb_s_str,
                         line,
                     )
                 return True
@@ -461,38 +461,38 @@ class ScaleneOutput:
             tbl.add_column(
                 Markdown("Line", style="dim"), style="dim", justify="right", no_wrap=True, width=4
             )
-            tbl.add_column(
-                Markdown("Time  " + "\n" + "_Python_", style="blue"), style="blue", no_wrap=True, width=6
-            )
-            tbl.add_column(
-                Markdown("––––––  \n_native_", style="blue"), style="blue", no_wrap=True, width=6
-            )
-            tbl.add_column(
-                Markdown("––––––  \n_system_", style="blue"), style="blue", no_wrap=True, width=6
-            )
-            if self.gpu:
-                tbl.add_column(
-                    Markdown("––––––  \n_GPU_", style="yellow4"), style="yellow4", no_wrap=True, width=6
-                )
+            # tbl.add_column(
+            #     Markdown("Time  " + "\n" + "_Python_", style="blue"), style="blue", no_wrap=True, width=6
+            # )
+            # tbl.add_column(
+            #     Markdown("––––––  \n_native_", style="blue"), style="blue", no_wrap=True, width=6
+            # )
+            # tbl.add_column(
+            #     Markdown("––––––  \n_system_", style="blue"), style="blue", no_wrap=True, width=6
+            # )
+            # if self.gpu:
+            #     tbl.add_column(
+            #         Markdown("––––––  \n_GPU_", style="yellow4"), style="yellow4", no_wrap=True, width=6
+            #     )
 
             other_columns_width = 0  # Size taken up by all columns BUT code
 
             if profile_memory:
-                tbl.add_column(
-                    Markdown("Memory  \n_Python_", style="dark_green"), style="dark_green", no_wrap=True, width=7
-                )
+                # tbl.add_column(
+                #     Markdown("Memory  \n_Python_", style="dark_green"), style="dark_green", no_wrap=True, width=7
+                # )
                 tbl.add_column(
                     Markdown("––––––  \n_net_", style="dark_green"), style="dark_green", no_wrap=True, width=6
                 )
-                tbl.add_column(
-                    Markdown("–––––––––––  \n_timeline_/%", style="dark_green"),
-                    style="dark_green",
-                    no_wrap=True,
-                    width=14,
-                )
-                tbl.add_column(
-                    Markdown("Copy  \n_(MB/s)_", style="yellow4"), style="yellow4", no_wrap=True, width=6
-                )
+                # tbl.add_column(
+                #     Markdown("–––––––––––  \n_timeline_/%", style="dark_green"),
+                #     style="dark_green",
+                #     no_wrap=True,
+                #     width=14,
+                # )
+                # tbl.add_column(
+                #     Markdown("Copy  \n_(MB/s)_", style="yellow4"), style="yellow4", no_wrap=True, width=6
+                # )
                 other_columns_width = 75 + (6 if self.gpu else 0)
                 tbl.add_column(
                     "\n" + fname_print,
