@@ -380,8 +380,12 @@ class ScaleneOutput:
                     net_mallocs[line_no] += line_mem_usage
                     file_mem_usage += line_mem_usage
 
-            print(f'Used {file_mem_usage:.2f} MB by:', fname)
             
+            if file_mem_usage < 10:
+                print('Skipping ', fname)
+                continue
+
+
             net_mallocs = OrderedDict(
                 sorted(net_mallocs.items(), key=itemgetter(1), reverse=True)
             )
