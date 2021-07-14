@@ -126,6 +126,11 @@ class ScaleneOutput:
                     n_free_mb /= count
 
         n_growth_mb = n_malloc_mb - n_free_mb
+
+        # skip anything below 10 MB?
+        if n_growth_mb < 10:
+            return False
+
         if -1 < n_growth_mb < 1:
             # Don't print out "-0" or anything below 1.
             n_growth_mb = 0

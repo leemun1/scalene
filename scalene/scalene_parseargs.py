@@ -50,7 +50,7 @@ class ScaleneParseArgs:
             f"""[b]Scalene[/b]: a high-precision CPU and memory profiler, version {scalene_version}
 [link=https://github.com/plasma-umass/scalene]https://github.com/plasma-umass/scalene[/link]
 
-Forked by @leemun1 - take 6
+Forked by @leemun1 - take 7
 
 command-line:
   % [b]scalene \[options] yourprogram.py[/b]
