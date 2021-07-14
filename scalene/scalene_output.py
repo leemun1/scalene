@@ -224,17 +224,17 @@ class ScaleneOutput:
                 nufs = spark_str + n_usage_fraction_str
 
             if not reduced_profile or ncpps + ncpcs + nufs:
-                    tbl.add_row(
-                        print_line_no,
-                        # ncpps,  # n_cpu_percent_python_str,
-                        # ncpcs,  # n_cpu_percent_c_str,
-                        # sys_str,
-                        # n_python_fraction_str,
-                        n_growth_mem_str,
-                        # nufs,  # spark_str + n_usage_fraction_str,
-                        # n_copy_mb_s_str,
-                        line,
-                    )
+                tbl.add_row(
+                    print_line_no,
+                    # ncpps,  # n_cpu_percent_python_str,
+                    # ncpcs,  # n_cpu_percent_c_str,
+                    # sys_str,
+                    # n_python_fraction_str,
+                    n_growth_mem_str,
+                    # nufs,  # spark_str + n_usage_fraction_str,
+                    # n_copy_mb_s_str,
+                    line,
+                )
                 return True
             else:
                 return False
@@ -364,6 +364,30 @@ class ScaleneOutput:
             return False
 
         for fname in report_files:
+            # calculate total memory usage in file
+            file_mem_usage = 0
+            net_mallocs: Dict[LineNumber, float] = defaultdict(float)
+            for line_no in stats.bytei_map[fname]:
+                for bytecode_index in stats.bytei_map[fname][line_no]:
+                    line_mem_usage = (
+                        stats.memory_malloc_samples[fname][line_no][
+                            bytecode_index
+                        ]
+                        - stats.memory_free_samples[fname][line_no][
+                            bytecode_index
+                        ]
+                    )
+                    net_mallocs[line_no] += line_mem_usage
+                    file_mem_usage = line_mem_usage
+
+            if file_mem_usage < 10:
+                print('File used less than 10 MB - skipping it', fname)
+                continue
+            
+            net_mallocs = OrderedDict(
+                sorted(net_mallocs.items(), key=itemgetter(1), reverse=True)
+            )
+
 
             # If the file was actually a Jupyter (IPython) cell,
             # restore its name, as in "[12]".
@@ -515,7 +539,7 @@ class ScaleneOutput:
                     f"function summary for {fname}", style="bold italic"
                 )
                 if profile_memory:
-                        tbl.add_row("", "", txt)
+                    tbl.add_row("", "", txt)
 
                 for fn_name in sorted(
                     fn_stats.cpu_samples_python,
@@ -558,20 +582,6 @@ class ScaleneOutput:
             console.print(tbl)
 
             # Report top K lines (currently 5) in terms of net memory consumption.
-            net_mallocs: Dict[LineNumber, float] = defaultdict(float)
-            for line_no in stats.bytei_map[fname]:
-                for bytecode_index in stats.bytei_map[fname][line_no]:
-                    net_mallocs[line_no] += (
-                        stats.memory_malloc_samples[fname][line_no][
-                            bytecode_index
-                        ]
-                        - stats.memory_free_samples[fname][line_no][
-                            bytecode_index
-                        ]
-                    )
-            net_mallocs = OrderedDict(
-                sorted(net_mallocs.items(), key=itemgetter(1), reverse=True)
-            )
             if len(net_mallocs) > 0:
                 console.print("Top net memory consumption, by line:")
                 number = 1
