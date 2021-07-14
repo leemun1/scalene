@@ -1,3 +1,4 @@
+import re
 import shutil
 import sys
 import tempfile
@@ -110,26 +111,7 @@ class ScaleneOutput:
             / stats.total_memory_malloc_samples  # was / n_malloc_mb
         )
 
-        if False:
-            # Currently disabled; possibly use in another column?
-            # Normalize by number of samples ("net *average*")
-            for bytei in stats.memory_malloc_count[fname][
-                line_no
-            ]:  # type : ignore
-                count = stats.memory_malloc_count[fname][line_no][bytei]
-                if count > 0:
-                    n_malloc_mb /= count
-                    n_python_malloc_mb /= count
-            for bytei in stats.memory_free_count[fname][line_no]:
-                count = stats.memory_free_count[fname][line_no][bytei]
-                if count > 0:
-                    n_free_mb /= count
-
         n_growth_mb = n_malloc_mb - n_free_mb
-
-        # skip anything below 10 MB?
-        if n_growth_mb < 10:
-            return False
 
         if -1 < n_growth_mb < 1:
             # Don't print out "-0" or anything below 1.
@@ -242,20 +224,6 @@ class ScaleneOutput:
                 nufs = spark_str + n_usage_fraction_str
 
             if not reduced_profile or ncpps + ncpcs + nufs:
-                if self.gpu:
-                    tbl.add_row(
-                        print_line_no,
-                        # ncpps,  # n_cpu_percent_python_str,
-                        # ncpcs,  # n_cpu_percent_c_str,
-                        # sys_str,
-                        # ngpus,
-                        # n_python_fraction_str,
-                        n_growth_mem_str,
-                        # nufs,  # spark_str + n_usage_fraction_str,
-                        # n_copy_mb_s_str,
-                        line,
-                    )
-                else:
                     tbl.add_row(
                         print_line_no,
                         # ncpps,  # n_cpu_percent_python_str,
@@ -271,42 +239,6 @@ class ScaleneOutput:
             else:
                 return False
 
-        else:
-
-            # Red highlight
-            if (
-                n_cpu_percent_c + n_cpu_percent_python + n_gpu_percent
-            ) >= self.highlight_percentage:
-                ncpps = Text.assemble((n_cpu_percent_python_str, "bold red"))
-                ncpcs = Text.assemble((n_cpu_percent_c_str, "bold red"))
-                ngpus = Text.assemble((n_gpu_percent_str, "bold red"))
-            else:
-                ncpps = n_cpu_percent_python_str
-                ncpcs = n_cpu_percent_c_str
-                ngpus = n_gpu_percent_str
-
-            if not reduced_profile or ncpps + ncpcs:
-                if self.gpu:
-                    tbl.add_row(
-                        print_line_no,
-                        ncpps,  # n_cpu_percent_python_str,
-                        ncpcs,  # n_cpu_percent_c_str,
-                        sys_str,
-                        ngpus,  # n_gpu_percent_str
-                        line,
-                    )
-                else:
-                    tbl.add_row(
-                        print_line_no,
-                        ncpps,  # n_cpu_percent_python_str,
-                        ncpcs,  # n_cpu_percent_c_str,
-                        sys_str,
-                        line,
-                    )
-
-                return True
-            else:
-                return False
 
     def output_profiles(
         self,
@@ -436,7 +368,6 @@ class ScaleneOutput:
             # If the file was actually a Jupyter (IPython) cell,
             # restore its name, as in "[12]".
             fname_print = fname
-            import re
 
             result = re.match("<ipython-input-([0-9]+)-.*>", fname_print)
             if result:
@@ -584,15 +515,7 @@ class ScaleneOutput:
                     f"function summary for {fname}", style="bold italic"
                 )
                 if profile_memory:
-                    if self.gpu:
                         tbl.add_row("", "", txt)
-                    else:
-                        tbl.add_row("", "", txt)
-                else:
-                    if self.gpu:
-                        tbl.add_row("", "", "", "", "", txt)
-                    else:
-                        tbl.add_row("", "", "", "", txt)
 
                 for fn_name in sorted(
                     fn_stats.cpu_samples_python,
